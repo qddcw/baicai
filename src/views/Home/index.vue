@@ -4,7 +4,7 @@
  * @Autor: DCW
  * @Date: 2021-02-02 11:37:19
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-02 16:36:51
+ * @LastEditTime: 2021-02-02 17:22:43
 -->
 <template>
   <div class="home">
@@ -266,7 +266,7 @@ export default {
     min-width: 1200px;
     height: 608px;
     position: relative;
-    margin-top: 100px;
+    padding-top: 100px;
     .bannerImg {
       width: 100%;
       height: 100%;
