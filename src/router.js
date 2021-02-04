@@ -4,7 +4,7 @@
  * @Autor: DCW
  * @Date: 2020-08-27 15:19:54
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-04 11:15:06
+ * @LastEditTime: 2021-02-04 11:29:03
  */
 import Vue from "vue";
 import Router from "vue-router";
@@ -39,8 +39,53 @@ export default new Router({
           component: () =>
             import("@/views/Home"),
           meta:{title:['首页']}
-        }
+        },
+        
       ]
+    },
+    {
+      path: "/member",
+      component: Layout,
+      children:[{
+        path: "/",
+        name: "member",
+        component: () =>
+          import("@/views/Member"),
+        meta:{title:['会员管理']}
+      }]
+    },
+    {
+      path: "/goods",
+      component: Layout,
+      children:[{
+        path: "/",
+        name: "goods",
+        component: () =>
+          import("@/views/Goods"),
+        meta:{title:['商品管理']}
+      }]
+    },
+    {
+      path: "/staff",
+      component: Layout,
+      children:[{
+        path: "/",
+        name: "staff",
+        component: () =>
+          import("@/views/Staff"),
+        meta:{title:['员工管理']}
+      }]
+    },
+    {
+      path: "/supplier",
+      component: Layout,
+      children:[{
+        path: "/",
+        name: "supplier",
+        component: () =>
+          import("@/views/Supplier"),
+        meta:{title:['供应商管理']}
+      }]
     },
     
     
