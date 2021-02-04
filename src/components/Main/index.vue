@@ -4,11 +4,11 @@
  * @Autor: DCW
  * @Date: 2020-08-27 15:19:54
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-02 11:39:14
+ * @LastEditTime: 2021-02-04 11:09:28
 -->
 <template>
     <div class="main">
-        <!-- <bread-crumb></bread-crumb> -->
+        <bread-crumb></bread-crumb>
         <router-view></router-view>
     </div>
 </template>

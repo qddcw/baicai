@@ -2,351 +2,512 @@
  * @Description: 
  * @Version: 2.0
  * @Autor: DCW
- * @Date: 2021-02-02 11:37:19
+ * @Date: 2021-02-04 11:10:55
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-02 17:22:43
+ * @LastEditTime: 2021-02-04 11:11:58
 -->
 <template>
-  <div class="home">
-    <!-- 头部固定栏 start -->
-    <div class="header" >
-      <div class="content">
-        <!-- logo+des -->
-        <div style="float:left;">
-          <a class="figure a-logo">
-            <img
-              id="logo_index"
-              src="../../assets/mmm.liudutech.cn.login.jpg"
-            />
-          </a>
-          <span class="des">
-            让天下没有难做的电商
-          </span>
-        </div>
-        <!-- nav+登录button -->
-        <div style="float:right;width:760px;">
-          <div style="float:left;width:670px;">
-            <div
-              class="nav"
-              style="display:inline-block;"
-              v-for="(item, index) in nav"
-              :key="index"
-            >
-              <a
-                :href="'#' + item.value"
-                :class="item.active ? 'active' : ''"
-                @click="changeNav(item.value)"
-                >{{ item.title }}</a
-              >
-            </div>
-          </div>
-          <el-button type="primary" round plain>登录</el-button>
-        </div>
-      </div>
-    </div>
-    <!-- 头部固定栏 end -->
-
-    <!-- index start -->
-    <div class="banner" id="index">
-      <el-carousel
-        height="600px"
-        indicator-position="none"
-        ref="carousel"
-        :interval="5000"
+  <div class="content">
+    <div id="map" class="map"></div>
+    <div id="searchInput">
+      <el-input
+        ref="searchInput"
+        placeholder="请输入会员姓名"
+        prefix-icon="el-icon-search"
+        v-model="searchModel"
+        clearable
+        @focus="memberListVisible = true"
+        @input="inputChange"
       >
-        <el-carousel-item
-          v-for="item in banner"
-          :key="item.name"
-          :name="item.name"
-        >
-          <div
-            :style="{ backgroundImage: `url(${item.img})` }"
-            class="bannerImg"
-          ></div>
-          <!-- <div class="bannerImg" style="width:100%;height:100%;"></div> -->
-        </el-carousel-item>
-      </el-carousel>
-      <div class="indicator">
-        <el-row>
-          <el-col
-            @click.native="indicatorChange(item.name)"
-            :span="6"
-            v-for="item in banner"
-            :key="item.name"
-            :style="
-              item.name == 'first'
-                ? {
-                    borderLeft: '1px solid',
-                    borderColor: 'rgba(255, 255, 255, 0.1)',
-                  }
-                : {}
-            "
-          >
-            <span class="des1">{{ item.des1 }}</span
-            ><br />
-            <span class="des2">{{ item.des2 }}</span>
-          </el-col>
-        </el-row>
-      </div>
+      </el-input>
     </div>
-    <!-- index end -->
-    <!-- safe start -->
-    <div class="safe" id="safe">
-      <div style="width: 1300px;margin: 0 auto;">
-        <div class="title">五大安全保障措施</div>
-        <div class="cardList">
-          <el-card shadow="hover" v-for="item in safe" :key="item.background">
-            <div class="icon" :style="{ background: item.background }">
-              <el-image
-                style="width: 82px; height: 82px"
-                :src="item.imgurl"
-                :fit="fit"
-              ></el-image>
-            </div>
+    <el-collapse-transition>
+      <div id="memberList" v-show="memberListVisible">
+        <div class="memberList">
+          <el-card
+            shadow="hover"
+            body-style="cursor:pointer;"
+            @click.native="detailsShow(index)"
+            v-for="(item, index) in memberList"
+            :key="item.id"
+          >
             <div>
-              <div class="des1">{{ item.des1 }}</div>
-              <div class="des2">{{ item.des2 }}</div>
+              <el-row>
+                <el-col :span="4"
+                  ><el-tag effect="dark">{{ item.name }}</el-tag></el-col
+                >
+                <el-col :span="5"
+                  ><el-tag
+                    effect="dark"
+                    :type="
+                      item.right == 1
+                        ? 'success'
+                        : item.right == 2
+                        ? 'danger'
+                        : 'warning'
+                    "
+                    >{{ item.right | rightFilter }}</el-tag
+                  ></el-col
+                >
+                <el-col :span="15"
+                  ><el-button
+                    @click.stop="showDialog(item)"
+                    plain
+                    size="mini"
+                    type="success"
+                    circle
+                    icon="el-icon-edit-outline"
+                    style="float:right"
+                  ></el-button
+                ></el-col>
+              </el-row>
             </div>
+            <span
+              ><el-tag effect="plain">{{ item.address }}</el-tag>
+              <el-button
+                plain
+                size="mini"
+                type="warning"
+                circle
+                icon="el-icon-arrow-down"
+                style="float:right"
+                v-show="!item.show"
+              ></el-button>
+              <el-button
+                plain
+                size="mini"
+                type="warning"
+                circle
+                icon="el-icon-arrow-up"
+                style="float:right"
+                v-show="item.show"
+              ></el-button>
+            </span>
+            <el-card v-show="item.show">
+              <el-tag effect="plain">卡号:{{ item.cardNum }}</el-tag
+              ><br />
+              <el-tag effect="plain">生日:{{ item.birthday }}</el-tag
+              ><br />
+              <el-tag effect="plain">电话:{{ item.phone }}</el-tag
+              ><br />
+              <el-tag effect="plain">积分:{{ item.integral }}</el-tag
+              ><br />
+              <el-tag effect="plain">余额:{{ item.money }}</el-tag
+              ><br />
+            </el-card>
           </el-card>
         </div>
+        <el-card body-style="padding: 5px 2px;">
+          <el-pagination
+            @current-change="currentChange"
+            :current-page="page"
+            :page-size="size"
+            layout="total , prev, pager, next"
+            :total="dataTotal"
+          >
+          </el-pagination>
+        </el-card>
       </div>
+    </el-collapse-transition>
+    <el-dialog
+      title="修改会员"
+      :visible.sync="dialogFormVisible"
+      :append-to-body="true"
+    >
+      <g-form-dialog
+        :form-items="formItems_dialog"
+        :merge-items="mergefrom"
+        @closeDialog="closeDialog"
+        ref="dialogForm"
+        @afterSubmit="submitForm"
+      >
+      </g-form-dialog>
+    </el-dialog>
+    <div id="lengend">
+      <el-card :body-style="cardBodyStyle">标注</el-card>
+      <el-checkbox-group v-model="checkList">
+        <el-card :body-style="cardBodyStyle"
+          ><el-checkbox label="1">普通会员</el-checkbox
+          ><img src="../../assets/marker/normalVip_small.gif" alt=""
+        /></el-card>
+
+        <el-card :body-style="cardBodyStyle"
+          ><el-checkbox label="2">高级会员</el-checkbox
+          ><img src="../../assets/marker/higherVip_small.gif" alt=""
+        /></el-card>
+
+        <el-card :body-style="cardBodyStyle"
+          ><el-checkbox label="3">超级会员</el-checkbox
+          ><img src="../../assets/marker/superVip_small.gif" alt=""
+        /></el-card>
+      </el-checkbox-group>
     </div>
-    <!-- safe end -->
   </div>
 </template>
 
 <script>
+import BMap from "BMap";
+import memberApi from "@/api/member.js";
+import normalIcon from "@/assets/marker/normalVip.gif";
+import higherIcon from "@/assets/marker/higherVip.gif";
+import superIcon from "@/assets/marker/superVip.gif";
+//import styleJson from "../../assets/custom_map_config.json";
+import $axios from '@/utils/request'
 export default {
   data() {
     return {
-      nav: [
-        { title: "首页", value: "index", active: true },
-        { title: "五大安全", value: "safe", active: false },
-        { title: "超级验号", value: "verification", active: false },
-        { title: "功能解析", value: "analysis", active: false },
-        { title: "超级权重任务", value: "weight", active: false },
-      ],
-      banner: [
+      cardBodyStyle: "padding: 15px 15px 5px;height:30px;",
+      checkList: ["1", "2", "3"],
+      searchModel: "",
+      memberListModel: [],
+      allMemberModel: [],
+      size: 5,
+      memberListVisible: false,
+      map: {},
+      dialogFormVisible: false,
+      mergefrom: {},
+      formItems_dialog: [
         {
-          name: "first",
-          img: require("../../assets/banner/banner5.png"),
-          des1: "搜索入池飚升神器",
-          des2: "助力商家快速突破运营瓶颈",
+          type: "el-input",
+          itemAttrs: {
+            prop: "name",
+            rules: [
+              {
+                required: true,
+                message: "必填项",
+                trigger: "blur",
+              },
+            ],
+            label: "会员姓名",
+          },
+          attrs: {
+            model: "name",
+            value: "",
+          },
         },
         {
-          name: "second",
-          img: require("../../assets/banner/banner1.png"),
-          des1: "告别没权重补单难",
-          des2: "多维度精细化干预解决方案",
+          type: "el-input",
+          itemAttrs: {
+            prop: "cardNum",
+            rules: [
+              {
+                required: true,
+                message: "必填项",
+                trigger: "blur",
+              },
+            ],
+            label: "会员卡号",
+          },
+          attrs: {
+            model: "cardNum",
+            value: "",
+          },
         },
         {
-          name: "third",
-          img: require("../../assets/banner/banner2.png"),
-          des1: "解决资金顾虑",
-          des2: "打破信任痛点,提升成交安全",
+          type: "g-select",
+          itemAttrs: {
+            prop: "payType",
+            rules: [
+              {
+                required: true,
+                message: "必填项",
+                trigger: "change",
+              },
+            ],
+            label: "支付方式",
+          },
+          attrs: {
+            model: "payType",
+            value: "",
+            options: [
+              {
+                label: "现金",
+                value: "1",
+              },
+              {
+                label: "支付宝",
+                value: "2",
+              },
+              {
+                label: "微信",
+                value: "3",
+              },
+              {
+                label: "银行卡",
+                value: "4",
+              },
+            ],
+          },
         },
         {
-          name: "forth",
-          img: require("../../assets/banner/banner3.png"),
-          des1: "拒绝同地址管理难",
-          des2: "大数据赋能，创新地址库验证",
-        },
-      ],
-      safe: [
-        {
-          imgurl: require("../../assets/safe/bz-1.png"),
-          background: "#09c152",
-          des1: "类目限制",
-          des2:
-            "全网独家类目限制派单，自动抓取商家宝贝类目属性，匹配最佳人群，精确到3级子类目，确保买手不会重复下单同类目产品；严格控制商家产品关联度，根据淘宝内部类目复购比列，指定买手不同类目的接单数量限制，达到全网领先。",
-        },
-        {
-          imgurl: require("../../assets/safe/bz-2.png"),
-          background: "#22cbc4",
-          des1: "运营团队",
-          des2: "真实团队运营，操刀单品每日计划，严控流量来源转化。",
+          type: "g-datepicker",
+          itemAttrs: {
+            prop: "birthday",
+            rules: [
+              {
+                required: true,
+                message: "必填项",
+                trigger: "blur",
+              },
+            ],
+            label: "生日",
+          },
+          attrs: {
+            model: "birthday",
+            value: "",
+          },
         },
         {
-          imgurl: require("../../assets/safe/bz-3.png"),
-          background: "#f95d60",
-          des1: "账号限制",
-          des2: "多样化的安全措施，系统与人工的多重把控，严守买号安全",
+          type: "g-areacascader",
+          itemAttrs: {
+            prop: "address",
+            rules: [
+              {
+                required: true,
+                message: "必填项",
+                trigger: "change",
+              },
+            ],
+            label: "地址",
+          },
+          attrs: {
+            model: "address",
+            value: "",
+          },
         },
         {
-          imgurl: require("../../assets/safe/bz-4.png"),
-          background: "#3b95f6",
-          des1: "流程安全",
-          des2: "通过多样化活动类型和活动流程的把控等，确保流程安全",
+          type: "el-input",
+          itemAttrs: {
+            prop: "money",
+            rules: [
+              {
+                required: true,
+                message: "必填项",
+                trigger: "blur",
+              },
+            ],
+            label: "余额",
+          },
+          attrs: {
+            model: "money",
+            value: "",
+          },
         },
         {
-          imgurl: require("../../assets/safe/bz-5.png"),
-          background: "#fc6b3f",
-          des1: "资金安全",
-          des2: "平台提供双重保障，让您的资金高枕无忧",
+          type: "el-input",
+          itemAttrs: {
+            prop: "integral",
+            rules: [
+              {
+                required: true,
+                message: "必填项",
+                trigger: "blur",
+              },
+            ],
+            label: "积分",
+          },
+          attrs: {
+            model: "integral",
+            value: "",
+          },
+        },
+        {
+          type: "el-input",
+          itemAttrs: {
+            prop: "phone",
+            label: "手机号",
+            rules: [
+              {
+                required: true,
+                message: "必填项",
+                trigger: "blur",
+              },
+            ],
+          },
+          attrs: {
+            model: "phone",
+            value: "",
+          },
         },
       ],
     };
   },
-
-  created() {},
-  methods: {
-    changeNav(val) {
-      this.nav.forEach((item) => {
-        item.value == val ? (item.active = true) : (item.active = false);
-      });
-    },
-    indicatorChange(name) {
-      this.$refs.carousel.setActiveItem(name);
+  created() {
+    this.initMemberList();
+  },
+  computed: {
+    memberList() {
+      return this.memberListModel;
     },
   },
-
-  filters: {},
+  methods: {
+    initMap() {
+      // 百度地图API功能
+      this.map = new BMap.Map("map");
+      let point = new BMap.Point(118.801902, 31.940456);
+      this.map.centerAndZoom(point, 8);
+      this.map.enableScrollWheelZoom(true);
+      this.map.addControl(new BMap.NavigationControl());
+      this.map.addEventListener("click", () => {
+        this.$refs.searchInput.blur();
+        this.memberListVisible = false;
+      });
+    },
+    drawMarkers(list) {
+      this.map.clearOverlays();
+      list.forEach((item) => {
+        let point = new BMap.Point(item.longitude, item.latitude);
+        let Icon =
+          item.right == "1"
+            ? normalIcon
+            : item.right == "2"
+            ? higherIcon
+            : superIcon;
+        var myIcon = new BMap.Icon(Icon, new BMap.Size(50, 60));
+        let marker = new BMap.Marker(point, { icon: myIcon }); // 创建标注
+        this.map.addOverlay(marker);
+      });
+    },
+    initMemberList() {
+      memberApi
+        .getMemberList({
+          page: this.page,
+          size: this.size,
+          searchModel: this.searchModel,
+        })
+        .then((res) => {
+          this.memberListModel = res.data.data.rows;
+          this.dataTotal = res.data.data.total;
+        });
+    },
+    getAllMembers() {
+      memberApi
+        .getAllMemberList({
+          checkList: this.checkList,
+        })
+        .then((res) => {
+          this.map.clearOverlays();
+          this.allMemberModel = res.data.data.rows;
+          this.drawMarkers(this.allMemberModel);
+        });
+    },
+    //更换页数
+    currentChange(val) {
+      this.page = val;
+      this.initMemberList();
+    },
+    detailsShow(index) {
+      this.memberListModel.forEach((item, ind) => {
+        if (ind !== index) {
+          item.show = false;
+        }
+      });
+      this.memberListModel[index].show = !this.memberListModel[index].show;
+    },
+    inputChange() {
+      this.initMemberList();
+    },
+    showDialog(row) {
+      this.mergefrom = Object.assign({}, row);
+      this.$nextTick(() => {
+        this.$refs.dialogForm.$children[0].resetFields();
+      });
+      this.dialogFormVisible = true;
+    },
+    submitForm(data) {
+      let subobj = JSON.parse(JSON.stringify(data));
+      memberApi.editMember(subobj).then((res) => {
+        const resp = res.data;
+        if (resp.flag) {
+          this.success(resp.message);
+        } else {
+          this.warn(resp.message);
+        }
+        this.dialogFormVisible = false;
+      });
+    },
+  },
+  watch: {
+    checkList: {
+      handler(n, o) {
+        let markerList = [];
+        n.forEach((item) => {
+          markerList = markerList.concat(
+            this.allMemberModel.filter((listItem) => {
+              return listItem.right == item;
+            })
+          );
+        });
+        this.drawMarkers(markerList);
+      },
+      immediate: false,
+    },
+  },
+  mounted() {
+    this.initMap();
+    this.getAllMembers();
+  },
+  filters: {
+    rightFilter(right) {
+      let changeType = "";
+      switch (right) {
+        case "1":
+          changeType = "普通会员";
+          break;
+        case "2":
+          changeType = "高级会员";
+          break;
+        case "3":
+          changeType = "超级会员";
+          break;
+      }
+      return changeType;
+    },
+  },
 };
 </script>
 
-<style scoped lang="scss">
-.home {
+<style scoped>
+.content {
+  position: relative;
+}
+.map {
+  height: calc(100vh - 164px);
+  position: relative;
+}
+#searchInput {
+  position: absolute;
+  left: 110px;
+  top: 20px;
+  width: 480px;
+}
+#memberList {
+  position: absolute;
+  left: 110px;
+  top: 60px;
+  width: 480px;
+}
+.memberList {
   width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  scroll-behavior: smooth;
-  .header {
-    height: 99px;
-    line-height: 99px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 99;
-    width: 100%;
-    background-color: #fff;
-    border-bottom: 1px solid #ededed;
-    .content {
-      margin: 0 auto;
-      width: 1200px;
-      .a-logo {
-        position: relative;
-        padding-right: 15px;
-        display: inline-block;
-      }
-      .a-logo > img {
-        vertical-align: middle;
-      }
-      .a-logo::after {
-        display: block;
-        content: "";
-        width: 1px;
-        height: 25px;
-        position: absolute;
-        top: 37px;
-        right: 0;
-        background-color: #e2e2e2;
-      }
-      .des {
-        padding-left: 15px;
-        color: #999;
-        font-size: 13px;
-      }
-
-      .nav {
-        a.active {
-          color: #106acf;
-          position: relative;
-          border-bottom: 2px solid #106acf;
-        }
-        a {
-          padding-bottom: 5px;
-          margin: 0 20px;
-          color: #333;
-          text-decoration: none;
-        }
-      }
-    }
-  }
-  .banner {
-    min-width: 1200px;
-    height: 608px;
-    position: relative;
-    padding-top: 100px;
-    .bannerImg {
-      width: 100%;
-      height: 100%;
-      -moz-background-size: 100% 100%;
-      background-size: 100% 100%;
-    }
-    .indicator {
-      position: absolute;
-      width: 100%;
-      bottom: 0;
-      z-index: 9;
-      background-color: rgba(255, 255, 255, 0.1);
-      ::v-deep .el-row {
-        margin: 0 auto;
-        width: 1200px;
-        .el-col {
-          cursor: pointer;
-          border-right: 1px solid;
-          border-color: rgba(255, 255, 255, 0.1);
-          padding: 30px 20px;
-          color: #fff;
-          text-align: center;
-          .des1 {
-            line-height: 30px;
-          }
-          .des2 {
-            font-size: 14px;
-            line-height: 30px;
-          }
-        }
-      }
-    }
-  }
-  .safe {
-    background: #f7faff;
-    overflow: hidden;
-    height: 694px;
-    .title {
-      font-size: 32px;
-      color: #000000;
-      text-align: center;
-      padding-top: 100px;
-    }
-    .cardList {
-      padding-top: 56px;
-      padding-bottom: 80px;
-      display: flex;
-      justify-content: space-between;
-      ::v-deep .el-card {
-        width: 222px;
-        height: 410px;
-        text-align: center;
-        background: #fff;
-        border-radius: 10px;
-        overflow: hidden;
-        transition: all 0.1s;
-        .el-card__body {
-          padding: 0;
-        }
-        cursor: pointer;
-        &:hover {
-          transform: scale(1.05);
-        }
-        .icon {
-          padding-top: 25px;
-          padding-bottom: 30px;
-        }
-        .des1 {
-          padding-top: 32px;
-          font-size: 24px;
-          color: #515151;
-        }
-        .des2 {
-          padding: 14px 24px 0px 24px;
-          font-size: 13px;
-          color: #959595;
-          text-align: justify;
-        }
-      }
-    }
-  }
+  height: 450px;
+  overflow-y: scroll;
+}
+#lengend {
+  position: absolute;
+  right: 30px;
+  bottom: 60px;
+  width: 200px;
+}
+#lengend img {
+  float: right;
+}
+.detailsCard {
+  display: none;
+}
+.el-tag {
+  margin-bottom: 2px;
+}
+i {
+  font-size: 1.4rem;
 }
 </style>

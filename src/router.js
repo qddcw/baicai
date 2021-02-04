@@ -4,11 +4,12 @@
  * @Autor: DCW
  * @Date: 2020-08-27 15:19:54
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-02 11:41:34
+ * @LastEditTime: 2021-02-04 11:15:06
  */
 import Vue from "vue";
 import Router from "vue-router";
 import Login from './views/Login';
+import Index from './views/Index';
 import Layout from "@/components/layout.vue"
 Vue.use(Router);
 
@@ -22,10 +23,15 @@ export default new Router({
       component: Login
     },
     {
+      path: "/index",
+      name: "Index",
+      component: Index
+    },
+    {
       path: "/",
       name: "layout",
       component: Layout ,
-      redirect:'/home',
+      redirect:'/index',
       children:[
         {
           path: "/home",
