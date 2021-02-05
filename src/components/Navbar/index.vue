@@ -4,7 +4,7 @@
       :default-active="path"
       class="el-menu-vertical-demo"
       :router="true"
-      background-color="#545c64"
+      background-color="#6e8b99"
       text-color="#fff"
       active-text-color="#ffd04b"
     >
@@ -79,5 +79,8 @@ span {
 } 
 .el-menu-item {
   font-size: 18px;
+}
+i{
+  color:#fff;
 }
 </style>

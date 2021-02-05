@@ -4,7 +4,7 @@
  * @Autor: DCW
  * @Date: 2021-02-04 11:10:55
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-04 11:11:58
+ * @LastEditTime: 2021-02-05 15:58:21
 -->
 <template>
   <div class="content">
@@ -152,7 +152,7 @@ import normalIcon from "@/assets/marker/normalVip.gif";
 import higherIcon from "@/assets/marker/higherVip.gif";
 import superIcon from "@/assets/marker/superVip.gif";
 //import styleJson from "../../assets/custom_map_config.json";
-import $axios from '@/utils/request'
+import $axios from "@/utils/request";
 export default {
   data() {
     return {

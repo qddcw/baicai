@@ -4,14 +4,13 @@
  * @Autor: DCW
  * @Date: 2020-08-27 15:19:54
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-04 11:13:42
+ * @LastEditTime: 2021-02-05 15:57:52
 -->
 <template>
   <div ref="layout">
     <app-header></app-header>
     <app-main></app-main>
     <app-navbar></app-navbar>
-    
   </div>
 </template>
 
@@ -24,7 +23,7 @@ export default {
     return {};
   },
 
-  components: { appMain ,appHeader,appNavbar},
+  components: { appMain, appHeader, appNavbar },
 
   mounted() {},
 };
@@ -37,12 +36,12 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  background-color: #2d3a4b;
+  background-color: #409eff;
 }
 .navbar {
   position: absolute;
   width: 12vw;
-  background-color: #545c64;
+  background-color: #6e8b99;
   top: 75px;
   left: 0;
   bottom: 0;

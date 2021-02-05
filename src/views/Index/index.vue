@@ -4,12 +4,12 @@
  * @Autor: DCW
  * @Date: 2021-02-02 11:37:19
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-02 17:22:43
+ * @LastEditTime: 2021-02-05 15:58:44
 -->
 <template>
   <div class="home">
     <!-- 头部固定栏 start -->
-    <div class="header" >
+    <div class="header">
       <div class="content">
         <!-- logo+des -->
         <div style="float:left;">
