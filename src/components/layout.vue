@@ -4,7 +4,7 @@
  * @Autor: DCW
  * @Date: 2020-08-27 15:19:54
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-05 15:57:52
+ * @LastEditTime: 2021-02-07 11:23:58
 -->
 <template>
   <div ref="layout">
@@ -32,7 +32,7 @@ export default {
 <style scoped>
 .header {
   position: absolute;
-  line-height: 75px;
+  line-height: 65px;
   top: 0;
   left: 0;
   right: 0;
@@ -42,7 +42,7 @@ export default {
   position: absolute;
   width: 12vw;
   background-color: #6e8b99;
-  top: 75px;
+  top: 65px;
   left: 0;
   bottom: 0;
   overflow-y: auto;
@@ -52,7 +52,7 @@ export default {
   width: 88vw;
   padding: 10px;
   background-color: #ddd;
-  top: 75px;
+  top: 65px;
   left: 12vw;
   bottom: 0;
   overflow-y: auto;
