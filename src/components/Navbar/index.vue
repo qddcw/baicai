@@ -4,7 +4,7 @@
  * @Autor: DCW
  * @Date: 2021-02-02 16:59:04
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-08 15:28:41
+ * @LastEditTime: 2021-02-08 17:18:56
 -->
 <template>
   <div class="navbar">
@@ -15,6 +15,7 @@
       background-color="#6e8b99"
       text-color="#fff"
       active-text-color="#ffd04b"
+      :unique-opened="true"
     >
       <template v-for="item in menuList">
         <el-submenu
