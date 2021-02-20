@@ -448,4 +448,28 @@ const memberdel = {
 };
 Mock.mock(`/member/del`, "post", memberdel);
 
+//home
+
+const homeGetAllData = {
+  code: 2000,
+  flag: true,
+  message: "查询成功",
+  data: {
+    benjin: 2.03,
+    yongjin: 3.02,
+    "gonggao|2": [
+      {
+        "id|+1": 11,
+        content: "@datetime('yyyy-MM-dd HH:mm:ss')  @ctitle(10,15)",
+      },
+    ],
+    xiaoliang: 0,
+    liulan: 0,
+    pingjia: 0,
+    xiaoshou: 0,
+    liuliang: 0,
+    zifan: 0,
+  },
+};
+Mock.mock(`/api/home/homeGetAllData`, "post", homeGetAllData);
 export default Mock;

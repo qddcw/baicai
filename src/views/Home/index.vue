@@ -4,448 +4,113 @@
  * @Autor: DCW
  * @Date: 2021-02-04 11:10:55
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-05 15:58:21
+ * @LastEditTime: 2021-02-20 15:35:46
 -->
 <template>
   <div class="content">
-    <div id="map" class="map"></div>
-    <div id="searchInput">
-      <el-input
-        ref="searchInput"
-        placeholder="请输入会员姓名"
-        prefix-icon="el-icon-search"
-        v-model="searchModel"
-        clearable
-        @focus="memberListVisible = true"
-        @input="inputChange"
-      >
-      </el-input>
-    </div>
-    <el-collapse-transition>
-      <div id="memberList" v-show="memberListVisible">
-        <div class="memberList">
-          <el-card
-            shadow="hover"
-            body-style="cursor:pointer;"
-            @click.native="detailsShow(index)"
-            v-for="(item, index) in memberList"
-            :key="item.id"
-          >
-            <div>
-              <el-row>
-                <el-col :span="4"
-                  ><el-tag effect="dark">{{ item.name }}</el-tag></el-col
-                >
-                <el-col :span="5"
-                  ><el-tag
-                    effect="dark"
-                    :type="
-                      item.right == 1
-                        ? 'success'
-                        : item.right == 2
-                        ? 'danger'
-                        : 'warning'
-                    "
-                    >{{ item.right | rightFilter }}</el-tag
-                  ></el-col
-                >
-                <el-col :span="15"
-                  ><el-button
-                    @click.stop="showDialog(item)"
-                    plain
-                    size="mini"
-                    type="success"
-                    circle
-                    icon="el-icon-edit-outline"
-                    style="float:right"
-                  ></el-button
-                ></el-col>
-              </el-row>
+    <div class="top">
+      <div style="width:25%">
+        <div>
+          <span>本金余额&nbsp;(元)</span>
+          <div class="line details" style="padding-bottom:10px;">
+            <div style="color: #ee4a4a;line-height:29px;">
+              {{ initData.benjin }}
             </div>
-            <span
-              ><el-tag effect="plain">{{ item.address }}</el-tag>
-              <el-button
-                plain
-                size="mini"
-                type="warning"
-                circle
-                icon="el-icon-arrow-down"
-                style="float:right"
-                v-show="!item.show"
-              ></el-button>
-              <el-button
-                plain
-                size="mini"
-                type="warning"
-                circle
-                icon="el-icon-arrow-up"
-                style="float:right"
-                v-show="item.show"
-              ></el-button>
-            </span>
-            <el-card v-show="item.show">
-              <el-tag effect="plain">卡号:{{ item.cardNum }}</el-tag
-              ><br />
-              <el-tag effect="plain">生日:{{ item.birthday }}</el-tag
-              ><br />
-              <el-tag effect="plain">电话:{{ item.phone }}</el-tag
-              ><br />
-              <el-tag effect="plain">积分:{{ item.integral }}</el-tag
-              ><br />
-              <el-tag effect="plain">余额:{{ item.money }}</el-tag
-              ><br />
-            </el-card>
-          </el-card>
+            <el-button size="mini" type="primary">充值</el-button>
+          </div>
         </div>
-        <el-card body-style="padding: 5px 2px;">
-          <el-pagination
-            @current-change="currentChange"
-            :current-page="page"
-            :page-size="size"
-            layout="total , prev, pager, next"
-            :total="dataTotal"
-          >
-          </el-pagination>
-        </el-card>
+        <div style="margin-top:10px;">
+          <span>佣金余额&nbsp;(元)</span>
+          <div class="details">
+            <div style="color: #ee4a4a;line-height:29px;">
+              {{ initData.yongjin }}
+            </div>
+            <el-button size="mini" type="primary">充值</el-button>
+          </div>
+        </div>
       </div>
-    </el-collapse-transition>
-    <el-dialog
-      title="修改会员"
-      :visible.sync="dialogFormVisible"
-      :append-to-body="true"
-    >
-      <g-form-dialog
-        :form-items="formItems_dialog"
-        :merge-items="mergefrom"
-        @closeDialog="closeDialog"
-        ref="dialogForm"
-        @afterSubmit="submitForm"
+      <div style="width:36%">
+        <div class="title line">
+          <span class="board">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;公告</span>
+          <span class="more">查看更多</span>
+        </div>
+        <div
+          v-for="(item, index) in initData.gonggao"
+          :key="index"
+          class="line"
+          style="padding:10px 0;"
+        >
+          <span style="cursor:pointer;" @click="warn(item.id)">{{
+            item.content
+          }}</span>
+        </div>
+      </div>
+      <div style="width:36%">
+        <span>快捷入口</span>
+        <div class="menu">
+          <div style="background:linear-gradient(-90deg,#409eff,#2989ed)">
+            新建销量任务
+          </div>
+          <div style="background:linear-gradient(-90deg,#87d2f2,#59abcd)">
+            新建浏览任务
+          </div>
+          <div style="background:linear-gradient(-90deg,#f19067,#ea7340)">
+            追平任务管理
+          </div>
+          <div style="background:linear-gradient(-90deg,#86a0fd,#6684f2)">
+            快递管理
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div
+        class="line"
+        style="line-height: 40px;font-size: 16px;font-weight: bolder"
       >
-      </g-form-dialog>
-    </el-dialog>
-    <div id="lengend">
-      <el-card :body-style="cardBodyStyle">标注</el-card>
-      <el-checkbox-group v-model="checkList">
-        <el-card :body-style="cardBodyStyle"
-          ><el-checkbox label="1">普通会员</el-checkbox
-          ><img src="../../assets/marker/normalVip_small.gif" alt=""
-        /></el-card>
-
-        <el-card :body-style="cardBodyStyle"
-          ><el-checkbox label="2">高级会员</el-checkbox
-          ><img src="../../assets/marker/higherVip_small.gif" alt=""
-        /></el-card>
-
-        <el-card :body-style="cardBodyStyle"
-          ><el-checkbox label="3">超级会员</el-checkbox
-          ><img src="../../assets/marker/superVip_small.gif" alt=""
-        /></el-card>
-      </el-checkbox-group>
+        新手发布任务流程
+      </div>
+      <div style="display:flex;flex-wrap: wrap;margin-top:10px;">
+        <div v-for="(item, index) in step" :key="index">
+          
+          <div class="stepItem">{{ item }}</div>
+          <div class="next" v-if="index != step.length-1"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import BMap from "BMap";
-import memberApi from "@/api/member.js";
-import normalIcon from "@/assets/marker/normalVip.gif";
-import higherIcon from "@/assets/marker/higherVip.gif";
-import superIcon from "@/assets/marker/superVip.gif";
+import homeApi from "@/api/home.js";
 //import styleJson from "../../assets/custom_map_config.json";
-import $axios from "@/utils/request";
 export default {
   data() {
     return {
-      cardBodyStyle: "padding: 15px 15px 5px;height:30px;",
-      checkList: ["1", "2", "3"],
-      searchModel: "",
-      memberListModel: [],
-      allMemberModel: [],
-      size: 5,
-      memberListVisible: false,
-      map: {},
-      dialogFormVisible: false,
-      mergefrom: {},
-      formItems_dialog: [
-        {
-          type: "el-input",
-          itemAttrs: {
-            prop: "name",
-            rules: [
-              {
-                required: true,
-                message: "必填项",
-                trigger: "blur",
-              },
-            ],
-            label: "会员姓名",
-          },
-          attrs: {
-            model: "name",
-            value: "",
-          },
-        },
-        {
-          type: "el-input",
-          itemAttrs: {
-            prop: "cardNum",
-            rules: [
-              {
-                required: true,
-                message: "必填项",
-                trigger: "blur",
-              },
-            ],
-            label: "会员卡号",
-          },
-          attrs: {
-            model: "cardNum",
-            value: "",
-          },
-        },
-        {
-          type: "g-select",
-          itemAttrs: {
-            prop: "payType",
-            rules: [
-              {
-                required: true,
-                message: "必填项",
-                trigger: "change",
-              },
-            ],
-            label: "支付方式",
-          },
-          attrs: {
-            model: "payType",
-            value: "",
-            options: [
-              {
-                label: "现金",
-                value: "1",
-              },
-              {
-                label: "支付宝",
-                value: "2",
-              },
-              {
-                label: "微信",
-                value: "3",
-              },
-              {
-                label: "银行卡",
-                value: "4",
-              },
-            ],
-          },
-        },
-        {
-          type: "g-datepicker",
-          itemAttrs: {
-            prop: "birthday",
-            rules: [
-              {
-                required: true,
-                message: "必填项",
-                trigger: "blur",
-              },
-            ],
-            label: "生日",
-          },
-          attrs: {
-            model: "birthday",
-            value: "",
-          },
-        },
-        {
-          type: "g-areacascader",
-          itemAttrs: {
-            prop: "address",
-            rules: [
-              {
-                required: true,
-                message: "必填项",
-                trigger: "change",
-              },
-            ],
-            label: "地址",
-          },
-          attrs: {
-            model: "address",
-            value: "",
-          },
-        },
-        {
-          type: "el-input",
-          itemAttrs: {
-            prop: "money",
-            rules: [
-              {
-                required: true,
-                message: "必填项",
-                trigger: "blur",
-              },
-            ],
-            label: "余额",
-          },
-          attrs: {
-            model: "money",
-            value: "",
-          },
-        },
-        {
-          type: "el-input",
-          itemAttrs: {
-            prop: "integral",
-            rules: [
-              {
-                required: true,
-                message: "必填项",
-                trigger: "blur",
-              },
-            ],
-            label: "积分",
-          },
-          attrs: {
-            model: "integral",
-            value: "",
-          },
-        },
-        {
-          type: "el-input",
-          itemAttrs: {
-            prop: "phone",
-            label: "手机号",
-            rules: [
-              {
-                required: true,
-                message: "必填项",
-                trigger: "blur",
-              },
-            ],
-          },
-          attrs: {
-            model: "phone",
-            value: "",
-          },
-        },
+      initData: {},
+      step: [
+        "1.账户本金/佣金充值",
+        "2.绑定店铺等待审核",
+        "3.新建计划",
+        "4.任务类型选择",
+        "5.任务规则设置",
+        "6.增值服务选择",
+        "7.完成支付",
+        "8.发布完成",
       ],
     };
   },
   created() {
-    this.initMemberList();
+    this.homeGetAllData();
   },
-  computed: {
-    memberList() {
-      return this.memberListModel;
-    },
-  },
+  computed: {},
   methods: {
-    initMap() {
-      // 百度地图API功能
-      this.map = new BMap.Map("map");
-      let point = new BMap.Point(118.801902, 31.940456);
-      this.map.centerAndZoom(point, 8);
-      this.map.enableScrollWheelZoom(true);
-      this.map.addControl(new BMap.NavigationControl());
-      this.map.addEventListener("click", () => {
-        this.$refs.searchInput.blur();
-        this.memberListVisible = false;
+    homeGetAllData() {
+      homeApi.homeGetAllData({}).then((res) => {
+        console.log("home初始data", res.data.data);
+        this.initData = res.data.data;
       });
     },
-    drawMarkers(list) {
-      this.map.clearOverlays();
-      list.forEach((item) => {
-        let point = new BMap.Point(item.longitude, item.latitude);
-        let Icon =
-          item.right == "1"
-            ? normalIcon
-            : item.right == "2"
-            ? higherIcon
-            : superIcon;
-        var myIcon = new BMap.Icon(Icon, new BMap.Size(50, 60));
-        let marker = new BMap.Marker(point, { icon: myIcon }); // 创建标注
-        this.map.addOverlay(marker);
-      });
-    },
-    initMemberList() {
-      memberApi
-        .getMemberList({
-          page: this.page,
-          size: this.size,
-          searchModel: this.searchModel,
-        })
-        .then((res) => {
-          this.memberListModel = res.data.data.rows;
-          this.dataTotal = res.data.data.total;
-        });
-    },
-    getAllMembers() {
-      memberApi
-        .getAllMemberList({
-          checkList: this.checkList,
-        })
-        .then((res) => {
-          this.map.clearOverlays();
-          this.allMemberModel = res.data.data.rows;
-          this.drawMarkers(this.allMemberModel);
-        });
-    },
-    //更换页数
-    currentChange(val) {
-      this.page = val;
-      this.initMemberList();
-    },
-    detailsShow(index) {
-      this.memberListModel.forEach((item, ind) => {
-        if (ind !== index) {
-          item.show = false;
-        }
-      });
-      this.memberListModel[index].show = !this.memberListModel[index].show;
-    },
-    inputChange() {
-      this.initMemberList();
-    },
-    showDialog(row) {
-      this.mergefrom = Object.assign({}, row);
-      this.$nextTick(() => {
-        this.$refs.dialogForm.$children[0].resetFields();
-      });
-      this.dialogFormVisible = true;
-    },
-    submitForm(data) {
-      let subobj = JSON.parse(JSON.stringify(data));
-      memberApi.editMember(subobj).then((res) => {
-        const resp = res.data;
-        if (resp.flag) {
-          this.success(resp.message);
-        } else {
-          this.warn(resp.message);
-        }
-        this.dialogFormVisible = false;
-      });
-    },
-  },
-  watch: {
-    checkList: {
-      handler(n, o) {
-        let markerList = [];
-        n.forEach((item) => {
-          markerList = markerList.concat(
-            this.allMemberModel.filter((listItem) => {
-              return listItem.right == item;
-            })
-          );
-        });
-        this.drawMarkers(markerList);
-      },
-      immediate: false,
-    },
-  },
-  mounted() {
-    this.initMap();
-    this.getAllMembers();
   },
   filters: {
     rightFilter(right) {
@@ -467,47 +132,101 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .content {
-  position: relative;
-}
-.map {
-  height: calc(100vh - 164px);
-  position: relative;
-}
-#searchInput {
-  position: absolute;
-  left: 110px;
-  top: 20px;
-  width: 480px;
-}
-#memberList {
-  position: absolute;
-  left: 110px;
-  top: 60px;
-  width: 480px;
-}
-.memberList {
-  width: 100%;
-  height: 450px;
-  overflow-y: scroll;
-}
-#lengend {
-  position: absolute;
-  right: 30px;
-  bottom: 60px;
-  width: 200px;
-}
-#lengend img {
-  float: right;
-}
-.detailsCard {
-  display: none;
-}
-.el-tag {
-  margin-bottom: 2px;
-}
-i {
-  font-size: 1.4rem;
+  .line {
+    border-bottom: 1px solid #dcdfe6;
+  }
+  .top {
+    display: flex;
+    justify-content: space-between;
+    & > div {
+      background-color: #fff;
+      padding: 20px;
+      box-sizing: border-box;
+      .details {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+      }
+      .title {
+        position: relative;
+        padding-bottom: 10px;
+        .board:before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 3px;
+          background: url("../../assets/home/i-loud.png") no-repeat;
+          width: 18px;
+          height: 15px;
+        }
+        .more {
+          position: absolute;
+          right: 0;
+          color: rgb(153, 153, 153);
+          cursor: pointer;
+          &:hover {
+            color: #777;
+          }
+        }
+      }
+      .menu {
+        margin-top: 15px;
+        div {
+          display: inline-block;
+          width: 130px;
+          height: 45px;
+          border-radius: 8px;
+          line-height: 45px;
+          color: #fff;
+          margin-right: 7px;
+          text-indent: 12px;
+          overflow: hidden;
+          position: relative;
+          cursor: pointer;
+        }
+        div:after {
+          content: "";
+          position: absolute;
+          right: 12px;
+          top: 15px;
+          background: url("../../assets/home/i-arrow-x.png") no-repeat;
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+  .step {
+    background: #fff;
+    margin-top: 15px;
+    margin-bottom:  20px;
+    padding:10px 20px;
+    .next {
+      float: left;
+      background: url("../../assets/home/i-arrow.png") no-repeat;
+      width: 48px;
+      height: 22px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+      margin-right: 15px;
+    }
+    .stepItem {
+      float: left;
+      width: 130px;
+      height: 38px;
+      line-height: 36px;
+      font-size: 12px;
+      text-align: center;
+      font-weight: bolder;
+      padding: 0 5px;
+      border: 1px solid #e9e9e9;
+      border-radius: 3px;
+      margin-right: 15px;
+      margin-bottom: 8px;
+
+    }
+  }
 }
 </style>
