@@ -4,7 +4,7 @@
  * @Autor: DCW
  * @Date: 2021-02-02 11:37:19
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-05 15:58:44
+ * @LastEditTime: 2021-02-22 09:22:31
 -->
 <template>
   <div class="home">
@@ -40,7 +40,7 @@
               >
             </div>
           </div>
-          <el-button type="primary" round plain>登录</el-button>
+          <el-button type="primary" round plain @click="login">登录</el-button>
         </div>
       </div>
     </div>
@@ -198,6 +198,9 @@ export default {
     indicatorChange(name) {
       this.$refs.carousel.setActiveItem(name);
     },
+    login(){
+      this.$router.push("/login")
+    }
   },
 
   filters: {},

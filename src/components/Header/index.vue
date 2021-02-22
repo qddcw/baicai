@@ -1,3 +1,11 @@
+<!--
+ * @Description: 
+ * @Version: 2.0
+ * @Autor: DCW
+ * @Date: 2021-02-02 16:59:04
+ * @LastEditors: DCW
+ * @LastEditTime: 2021-02-22 09:34:48
+-->
 <template>
     <div class="header">
         <a href="/home">
@@ -43,7 +51,7 @@ import {logout} from '@/api/login'
                                     message:data.message,
                                     type:'success'
                                 })
-                                this.$router.push('/login')
+                                this.$router.push('/index')
                             }else {
                                 this.$message({
                                     message:data.message,
