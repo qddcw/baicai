@@ -4,7 +4,7 @@
  * @Autor: DCW
  * @Date: 2021-02-02 16:59:04
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-22 10:11:01
+ * @LastEditTime: 2021-02-22 11:56:17
 -->
 <template>
   <div class="login-container">
@@ -132,23 +132,23 @@ export default {
         qq: "",
         invit: "",
       },
-      loginShow: false,
+      loginShow: true,
     };
   },
   methods: {
     onSubmit() {
-      //   if (this.form.username == "") {
-      //     this.warn("请输入手机号！");
-      //     return;
-      //   }
+        if (this.form.username == "") {
+          this.warn("请输入手机号！");
+          return;
+        }
       //   if (!/^[1][3,4,5,7,8,9][0-9]{9}$/.test(this.form.username)) {
       //     this.warn("手机号格式错误！");
       //     return;
       //   }
-      //   if (this.form.password == "") {
-      //     this.warn("请输入密码！");
-      //     return;
-      //   }
+        if (this.form.password == "") {
+          this.warn("请输入密码！");
+          return;
+        }
       //   if (this.form.password.length < 6 || this.form.password.length > 18) {
       //     this.warn("请输入6-18位密码！");
       //     return;
@@ -157,12 +157,12 @@ export default {
         const resp = res.data;
         if (resp.flag) {
           this.success(resp.message);
-          window.localStorage.setItem("token", JSON.stringify(resp.data.token));
+          window.sessionStorage.setItem("token", JSON.stringify(resp.data.token));
 
           getUserInfo(resp.data.token).then((res_info) => {
             if (res_info.data.flag) {
               this.success(res_info.data.message);
-              window.localStorage.setItem(
+              window.sessionStorage.setItem(
                 "userinfo",
                 JSON.stringify(res_info.data.data)
               );

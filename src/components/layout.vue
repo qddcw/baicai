@@ -4,7 +4,7 @@
  * @Autor: DCW
  * @Date: 2020-08-27 15:19:54
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-07 11:23:58
+ * @LastEditTime: 2021-02-22 11:02:02
 -->
 <template>
   <div ref="layout">
@@ -29,14 +29,14 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .header {
   position: absolute;
   line-height: 65px;
   top: 0;
   left: 0;
   right: 0;
-  background-color: #409eff;
+  background-color: #2989ed;
 }
 .navbar {
   position: absolute;
@@ -48,6 +48,9 @@ export default {
   overflow-y: auto;
 }
 .main {
+  &::-webkit-scrollbar {
+    display: none; /* Chrome Safari */
+  }
   position: absolute;
   width: 88vw;
   padding: 10px;

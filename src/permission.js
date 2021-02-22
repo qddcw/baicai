@@ -11,7 +11,7 @@ import { getUserInfo } from "@/api/login";
 import Vue from "vue";
 
 router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   let v1 = new Vue();
   if (!token) {
     if (to.path == "/index") {
@@ -33,14 +33,14 @@ router.beforeEach((to, from, next) => {
       });
       next({ path: from.path });
     } else {
-      const userinfo = localStorage.getItem("userinfo");
+      const userinfo = sessionStorage.getItem("userinfo");
       if (userinfo) {
         next();
       } else {
         getUserInfo(token).then((res) => {
           const data = res.data;
           if (data.flag) {
-            localStorage.setItem("userinfo", JSON.stringify(data.data));
+            sessionStorage.setItem("userinfo", JSON.stringify(data.data));
             next();
           } else {
             v1.$message({

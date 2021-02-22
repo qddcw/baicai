@@ -4,7 +4,7 @@
  * @Autor: DCW
  * @Date: 2021-02-02 16:59:04
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-08 17:18:56
+ * @LastEditTime: 2021-02-22 11:55:08
 -->
 <template>
   <div class="navbar">
@@ -61,7 +61,7 @@ export default {
   methods: {},
   created() {
     this.path = this.$route.path;
-    getMenu(JSON.parse(localStorage.getItem("token"))).then((res) => {
+    getMenu(JSON.parse(sessionStorage.getItem("token"))).then((res) => {
       this.menuList = res.data.data.menu;
     });
   },

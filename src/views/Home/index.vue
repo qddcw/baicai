@@ -4,7 +4,7 @@
  * @Autor: DCW
  * @Date: 2021-02-04 11:10:55
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-20 15:35:46
+ * @LastEditTime: 2021-02-22 11:44:48
 -->
 <template>
   <div class="content">
@@ -72,11 +72,34 @@
       </div>
       <div style="display:flex;flex-wrap: wrap;margin-top:10px;">
         <div v-for="(item, index) in step" :key="index">
-          
           <div class="stepItem">{{ item }}</div>
-          <div class="next" v-if="index != step.length-1"></div>
+          <div class="next" v-if="index != step.length - 1"></div>
         </div>
       </div>
+    </div>
+    <div class="cards">
+      <div
+        v-for="(item, index) in cardsInfo"
+        :key="index"
+        class="card"
+        :style="{ 'border-color': item.color }"
+      >
+        <div class="title">{{ item.title }}</div>
+        <div :class="'data ' + 'detail' + index">
+          <span
+            :style="{
+              color: item.color,
+              'font-size': '24px',
+              'padding-left': '60px',
+            }"
+            >{{ item.data }}</span
+          ><span style="font-size:15px;margin-left:3px;">单</span>
+        </div>
+      </div>
+    </div>
+    <div class='task'>
+      <div class='echarts'></div>
+      <div class='table'></div>
     </div>
   </div>
 </template>
@@ -97,6 +120,44 @@ export default {
         "6.增值服务选择",
         "7.完成支付",
         "8.发布完成",
+      ],
+      cardsInfo: [
+        {
+          color: "#409eff",
+          title: "销量任务待审核",
+          data: 0,
+          path: "",
+        },
+        {
+          color: "#85d1f1",
+          title: "浏览任务待审核",
+          data: 0,
+          path: "",
+        },
+        {
+          color: "#5599de",
+          title: "评价待审核",
+          data: 0,
+          path: "",
+        },
+        {
+          color: "#6684f2",
+          title: "销量投诉待审核",
+          data: 0,
+          path: "",
+        },
+        {
+          color: "#86d2f2",
+          title: "流量投诉待审核",
+          data: 0,
+          path: "",
+        },
+        {
+          color: "#86d2f2",
+          title: "自返任务待返款",
+          data: 0,
+          path: "",
+        },
       ],
     };
   },
@@ -200,9 +261,9 @@ export default {
   }
   .step {
     background: #fff;
-    margin-top: 15px;
-    margin-bottom:  20px;
-    padding:10px 20px;
+    margin-top: 10px;
+    margin-bottom: 13px;
+    padding: 10px 20px;
     .next {
       float: left;
       background: url("../../assets/home/i-arrow.png") no-repeat;
@@ -225,7 +286,70 @@ export default {
       border-radius: 3px;
       margin-right: 15px;
       margin-bottom: 8px;
+    }
+  }
+  .cards {
+    display: flex;
+    flex-wrap: wrap;
+    .card {
+      background: #fff;
+      border-top: 4px solid #409eff;
+      border-radius: 5px;
+      margin-right: 20px;
+      width:15%;
+      min-width: 200px;
+      height: 128px;
+      text-align: center;
+      -moz-box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+      -webkit-box-shadow: 0px 3px 10px rgb(0 0 0 / 10%);
+      box-shadow: 0px 3px 10px rgb(0 0 0 / 10%);
+      margin-bottom: 10px;
+      .title {
+        margin-top: 20px;
+        margin-bottom: 25px;
+        font-size: 15px;
+        line-height: 16px;
+      }
+      .data {
+        position: relative;
+        cursor: pointer;
+      }
+      .data:before {
+        content: "";
+        position: absolute;
+        top: -9px;
+        width: 48px;
+        height: 48px;
+        background: url("../../assets/home/i-c-index.png") no-repeat;
+      }
+      .detail1:before {
+        background: url("../../assets/home/i-c-index.png") no-repeat -48px 0;
+      }
+      .detail2:before {
+        background: url("../../assets/home/i-c-index.png") no-repeat -96px 0;
+      }
+      .detail3:before {
+        background: url("../../assets/home/i-c-index.png") no-repeat -144px 0;
+      }
+      .detail4:before {
+        background: url("../../assets/home/i-c-index.png") no-repeat -192px 0;
+      }
+    }
+  }
+  .task{
+    display: flex;
+    justify-content: space-between;
+    .echarts{
+      width:50%;
+      height:400px;
+      margin-right:10px;
+      background-color: #fff;
 
+    }
+    .table{
+      width:50%;
+      height:400px;
+      background-color: #fff;
     }
   }
 }

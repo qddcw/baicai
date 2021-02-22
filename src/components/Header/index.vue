@@ -30,7 +30,7 @@ import {logout} from '@/api/login'
     export default {
         data() {
             return {
-                username:JSON.parse(localStorage.getItem("userinfo")).name
+                username:JSON.parse(sessionStorage.getItem("userinfo")).name
             }
         },
 
@@ -41,12 +41,12 @@ import {logout} from '@/api/login'
                 switch(command){
                     case 'changePassword' : break;
                     case 'logout' :
-                        logout(localStorage.getItem("token")).then(res => {
+                        logout(sessionStorage.getItem("token")).then(res => {
                             const data = res.data;
                             console.log(res)
                             if(data.flag){
-                                localStorage.removeItem("token");
-                                localStorage.removeItem("userinfo");
+                                sessionStorage.removeItem("token");
+                                sessionStorage.removeItem("userinfo");
                                 this.$message({
                                     message:data.message,
                                     type:'success'
