@@ -4,7 +4,7 @@
  * @Autor: DCW
  * @Date: 2021-02-04 11:10:55
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-22 11:44:48
+ * @LastEditTime: 2021-02-22 16:43:35
 -->
 <template>
   <div class="content">
@@ -97,9 +97,25 @@
         </div>
       </div>
     </div>
-    <div class='task'>
-      <div class='echarts'></div>
-      <div class='table'></div>
+    <div class="task">
+      <div class="echarts">
+        <div class="title">
+          <span style="font-weight: bolder;line-height: 40px;"
+            >任务完成数据</span
+          >
+          <div style="float:right;">
+            日期筛选：<g-daterange
+              :type="'daterange'"
+              v-model="daterange"
+            ></g-daterange
+            ><el-button type="primary">查询</el-button>
+          </div>
+        </div>
+        <div class='echart'>
+          
+        </div>
+      </div>
+      <div class="table"></div>
     </div>
   </div>
 </template>
@@ -153,12 +169,13 @@ export default {
           path: "",
         },
         {
-          color: "#86d2f2",
+          color: "#409eff",
           title: "自返任务待返款",
           data: 0,
           path: "",
         },
       ],
+      daterange: [],
     };
   },
   created() {
@@ -296,7 +313,7 @@ export default {
       border-top: 4px solid #409eff;
       border-radius: 5px;
       margin-right: 20px;
-      width:15%;
+      width: 15%;
       min-width: 200px;
       height: 128px;
       text-align: center;
@@ -336,19 +353,21 @@ export default {
       }
     }
   }
-  .task{
+  .task {
     display: flex;
     justify-content: space-between;
-    .echarts{
-      width:50%;
-      height:400px;
-      margin-right:10px;
+    margin-bottom:15px;
+    .echarts {
+      width: 50%;
+      height: 400px;
+      margin-right: 10px;
       background-color: #fff;
-
+      box-sizing: border-box;
+      padding: 10px 10px 0 20px;
     }
-    .table{
-      width:50%;
-      height:400px;
+    .table {
+      width: 50%;
+      height: 400px;
       background-color: #fff;
     }
   }
