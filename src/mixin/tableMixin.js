@@ -41,14 +41,14 @@ export default {
         },
         //更换每页数据条数
         handleSizeChange(val) {
-            this.$refs.searchFrom.$children[0].resetFields();
+            // this.$refs.searchFrom.$children[0].resetFields();
             this.psize = val;
             this.page = 1;
             this.getList(this.url);
         },
         //更换页数
         handleCurrentChange(val) {
-            this.$refs.searchFrom.$children[0].resetFields();
+            // this.$refs.searchFrom.$children[0].resetFields();
             this.page = val;
             this.getList(this.url);
         },
@@ -78,13 +78,13 @@ export default {
         },
         //更换每页数据条数
         handleSizeChange_dialog(val) {
-            this.$refs.searchFrom.$children[0].resetFields();
+            // this.$refs.searchFrom.$children[0].resetFields();
             this.psize_dialog = val;
             this.getList_dialog(this.url_dialog);
         },
         //更换页数
         handleCurrentChange_dialog(val) {
-            this.$refs.searchFrom.$children[0].resetFields();
+            // this.$refs.searchFrom.$children[0].resetFields();
             this.page_dialog = val;
             this.getList_dialog(this.url_dialog);
         },

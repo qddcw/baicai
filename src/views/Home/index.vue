@@ -4,7 +4,7 @@
  * @Autor: DCW
  * @Date: 2021-02-04 11:10:55
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-23 10:03:06
+ * @LastEditTime: 2021-02-23 11:24:18
 -->
 <template>
   <div class="content">
@@ -115,7 +115,9 @@
           <chart-wrap :echartdata="echartOptions"></chart-wrap>
         </div>
       </div>
-      <div class="table"></div>
+      <div class="table">
+        <g-table></g-table>
+      </div>
     </div>
   </div>
 </template>
@@ -133,6 +135,7 @@ let option = {
   grid: {
     left: "1%",
     right: "3%",
+    bottom:'2%',
     containLabel: true,
   },
 
@@ -428,7 +431,8 @@ export default {
       box-sizing: border-box;
       padding: 10px 10px 0 20px;
       .echart {
-        height: 100%;
+        margin-top:10px;
+        height: 340px;
       }
     }
     .table {
