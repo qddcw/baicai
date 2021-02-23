@@ -4,7 +4,7 @@
  * @Autor: DCW
  * @Date: 2021-02-04 11:10:55
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-22 16:43:35
+ * @LastEditTime: 2021-02-23 10:03:06
 -->
 <template>
   <div class="content">
@@ -111,8 +111,8 @@
             ><el-button type="primary">查询</el-button>
           </div>
         </div>
-        <div class='echart'>
-          
+        <div class="echart">
+          <chart-wrap :echartdata="echartOptions"></chart-wrap>
         </div>
       </div>
       <div class="table"></div>
@@ -122,8 +122,69 @@
 
 <script>
 import homeApi from "@/api/home.js";
+import chartWrap from "../../components/Global/echarts/line";
+
 //import styleJson from "../../assets/custom_map_config.json";
+
+let option = {
+  legend: {
+    data: ["销量", "流量", "追评"],
+  },
+  grid: {
+    left: "1%",
+    right: "3%",
+    containLabel: true,
+  },
+
+  // 提示框
+  tooltip: {
+    trigger: "axis",
+  },
+
+  xAxis: {
+    type: "category",
+    // boundaryGap值为false的时候，折线第一个点在y轴上
+    boundaryGap: false,
+    data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  },
+
+  yAxis: {
+    name: "数值",
+    type: "value",
+    min: 0, // 设置y轴刻度的最小值
+    max: 1800, // 设置y轴刻度的最大值
+    splitNumber: 9, // 设置y轴刻度间隔个数
+  },
+
+  series: [
+    {
+      name: "销量",
+      data: [820, 932, 301, 1434, 1290, 1330, 1320],
+      type: "line",
+      symbol: "none",
+    },
+
+    {
+      name: "流量",
+      data: [620, 732, 941, 834, 1690, 1030, 920],
+      type: "line",
+      symbol: "none",
+    },
+
+    {
+      name: "追评",
+      data: [120, 232, 541, 134, 290, 130, 120],
+      type: "line",
+      symbol: "none",
+    },
+  ],
+
+  color: ["#409eff", "#f19067", "#6684f2"],
+};
 export default {
+  components: {
+    chartWrap,
+  },
   data() {
     return {
       initData: {},
@@ -176,8 +237,10 @@ export default {
         },
       ],
       daterange: [],
+      echartOptions: option,
     };
   },
+
   created() {
     this.homeGetAllData();
   },
@@ -356,7 +419,7 @@ export default {
   .task {
     display: flex;
     justify-content: space-between;
-    margin-bottom:15px;
+    margin-bottom: 15px;
     .echarts {
       width: 50%;
       height: 400px;
@@ -364,6 +427,9 @@ export default {
       background-color: #fff;
       box-sizing: border-box;
       padding: 10px 10px 0 20px;
+      .echart {
+        height: 100%;
+      }
     }
     .table {
       width: 50%;
