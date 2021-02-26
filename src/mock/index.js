@@ -469,6 +469,17 @@ const homeGetAllData = {
     xiaoshou: 0,
     liuliang: 0,
     zifan: 0,
+    "taskTableData|10": [
+      {
+        "id|+1": 10,
+        done: "@integer(0,500)", //大于1000的正整数
+        shenhe: "@integer(0,500)", //大于1000的正整数
+        jiedan: "@integer(0,500)", //大于1000的正整数
+        benjin: "@integer(0,500)", //大于1000的正整数
+        yongjin: "@integer(0,500)", //大于1000的正整数
+        "type|1": ["type1", "type2", "type3", "type4"], // 4选 其1
+      },
+    ],
   },
 };
 Mock.mock(`/api/home/homeGetAllData`, "post", homeGetAllData);

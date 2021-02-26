@@ -4,7 +4,7 @@
  * @Autor: DCW
  * @Date: 2021-02-04 11:10:55
  * @LastEditors: DCW
- * @LastEditTime: 2021-02-23 11:24:18
+ * @LastEditTime: 2021-02-26 14:57:58
 -->
 <template>
   <div class="content">
@@ -116,9 +116,33 @@
         </div>
       </div>
       <div class="table">
-        <g-table></g-table>
+        <div class="title">
+          <span style="font-weight: bolder;line-height: 40px;"
+            >任务完成数据</span
+          >
+          <div style="float:right;">
+            日期筛选：<g-daterange
+              :type="'daterange'"
+              v-model="daterange"
+            ></g-daterange
+            ><el-button type="primary">查询</el-button>
+          </div>
+        </div>
+        <el-table :data="taskTableData" style="width: 100%" height="330">
+          <el-table-column prop="type" label="任务类型"> </el-table-column>
+          <el-table-column label="任务数据">
+            <el-table-column prop="done" label="已完成"> </el-table-column>
+            <el-table-column prop="shenhe" label="已审核"> </el-table-column>
+            <el-table-column prop="jiedan" label="待接单"> </el-table-column>
+          </el-table-column>
+          <el-table-column label="资金数据">
+            <el-table-column prop="benjin" label="本金"> </el-table-column>
+            <el-table-column prop="yongjin" label="佣金"> </el-table-column>
+          </el-table-column>
+        </el-table>
       </div>
     </div>
+    
   </div>
 </template>
 
@@ -135,7 +159,7 @@ let option = {
   grid: {
     left: "1%",
     right: "3%",
-    bottom:'2%',
+    bottom: "2%",
     containLabel: true,
   },
 
@@ -241,6 +265,7 @@ export default {
       ],
       daterange: [],
       echartOptions: option,
+      taskTableData: [],
     };
   },
 
@@ -251,8 +276,9 @@ export default {
   methods: {
     homeGetAllData() {
       homeApi.homeGetAllData({}).then((res) => {
-        console.log("home初始data", res.data.data);
         this.initData = res.data.data;
+        this.taskTableData = this.initData.taskTableData
+        
       });
     },
   },
@@ -431,7 +457,7 @@ export default {
       box-sizing: border-box;
       padding: 10px 10px 0 20px;
       .echart {
-        margin-top:10px;
+        margin-top: 10px;
         height: 340px;
       }
     }
@@ -439,6 +465,11 @@ export default {
       width: 50%;
       height: 400px;
       background-color: #fff;
+      box-sizing: border-box;
+      padding: 10px;
+      .title {
+        margin-bottom: 10px;
+      }
     }
   }
 }
